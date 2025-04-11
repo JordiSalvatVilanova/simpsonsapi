@@ -92,6 +92,7 @@ window.addEventListener('DOMContentLoaded', () => {
       // Añadir la tarjeta al contenedor
       container.appendChild(card);
     });
+    index += LIMIT;
 }
 
 
@@ -118,6 +119,61 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 // Jeynner-------------------
+const generoMasculino = "Masculino";
+const generoFemenino = "Femenino";
+
+// let masculino = allCharacters.filter(allCharacters => allCharacters.Genero === generoMasculino);
+// let femenino = allCharacters.filter(allCharacters => allCharacters.Genero === generoFemenino);
+
+
+// Crear contenedor de filtros
+const filtrosContainer = document.createElement('div');
+filtrosContainer.className = 'filtros-container';
+
+filtrosContainer.innerHTML = `
+  <button id="filtro-todos">Todos</button>
+  <button id="filtro-masculino">Masculino</button>
+  <button id="filtro-femenino">Femenino</button>
+`;
+
+document.body.insertBefore(filtrosContainer, container);
+
+function renderFilterCharacters(personajes: Personaje[]): void {
+  container.innerHTML = ''; // Limpiar los personajes anteriores
+
+  personajes.forEach(personaje => {
+    const card = document.createElement('div');
+    card.className = 'character-card';
+
+    card.innerHTML = `
+      <h3>${personaje.Nombre}</h3>
+      <img src="${personaje.Imagen}" alt="${personaje.Nombre}" />
+      <p>Género: ${personaje.Genero}</p>
+      <p>Estado: ${personaje.Estado}</p>
+      <p>Ocupación: ${personaje.Ocupacion}</p>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+document.getElementById('filtro-todos')?.addEventListener('click', () => {
+  index = 0;
+  renderNextCharacters();
+});
+
+document.getElementById('filtro-masculino')?.addEventListener('click', () => {
+  const masculino = allCharacters.filter(p => p.Genero === generoMasculino);
+  renderFilterCharacters(masculino);
+});
+
+document.getElementById('filtro-femenino')?.addEventListener('click', () => {
+  const femenino = allCharacters.filter(p => p.Genero === generoFemenino);
+  renderFilterCharacters(femenino);
+});
+
+
+
 
 
 
