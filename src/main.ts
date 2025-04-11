@@ -24,9 +24,9 @@ window.addEventListener('DOMContentLoaded', () => {
   document.body.appendChild(loadingScreen);
 
   // Contenedor principal para los personajes
-  const container = document.createElement('div');
-  container.className = 'character-container';
-  document.body.appendChild(container);
+  const container = document.getElementsByClassName ('container')[0] as HTMLElement;
+  // container.className = 'character-container';
+  // document.body.appendChild(container);
 
   // Obtener todos los personajes de golpe
   async function fetchAllCharacters(): Promise<Personaje[]> {
@@ -39,25 +39,64 @@ window.addEventListener('DOMContentLoaded', () => {
   // Mostrar el siguiente grupo de personajes
   function renderNextCharacters(): void {
     if (index >= allCharacters.length) return;
-
+  
     const siguiente = allCharacters.slice(index, index + LIMIT);
     siguiente.forEach(personaje => {
+      // Crear la tarjeta (carta)
       const card = document.createElement('div');
-      card.className = 'character-card';
-
+  
+      card.className = `
+        carta
+        border border-gray-200
+        p-4
+        mx-5
+        rounded-2xl
+        bg-white
+        shadow
+        w-[450px]
+        flex flex-col
+        items-center
+        space-y-4
+      `.trim();
+  
+      // Estructura interna de la tarjeta
       card.innerHTML = `
-        <h3>${personaje.Nombre}</h3>
-        <img src="${personaje.Imagen}" alt="${personaje.Nombre}" />
-        <p>Género: ${personaje.Genero}</p>
-        <p>Estado: ${personaje.Estado}</p>
-        <p>Ocupación: ${personaje.Ocupacion}</p>
+        <!-- Nombre del personaje encima de la tarjeta -->
+        <div class="titulo text-center text-black font-bold text-xl">
+          ${personaje.Nombre}
+        </div>
+        <div class="contenido flex flex-col sm:flex-row w-full justify-between items-center gap-4">
+          <!-- Contenedor de la imagen -->
+          <div class="imagen-container w-[200px] h-[200px] flex items-center justify-center bg-gray-100 rounded-xl overflow-hidden">
+            <img
+              class="imagen w-full h-full object-contain"
+              src="${personaje.Imagen}"
+              alt="${personaje.Nombre}"
+            />
+          </div>
+          <!-- Leyenda (ahora se ajusta para estar al lado de la imagen a partir de 'sm') -->
+          <div class="leyenda flex-1 h-auto p-4 bg-white rounded-xl border border-gray-200 shadow text-left flex flex-col justify-center">
+            <p class="text-md text-gray-700 mb-2">
+              <span class="font-semibold">Género:</span> ${personaje.Genero}
+            </p>
+            <p class="text-md text-gray-700 mb-2">
+              <span class="font-semibold">Estado:</span> ${personaje.Estado}
+            </p>
+            <p class="text-md text-gray-700">
+              <span class="font-semibold">Ocupación:</span> ${personaje.Ocupacion}
+            </p>
+          </div>
+        </div>
       `;
-
+  
+      // Añadir la tarjeta al contenedor
       container.appendChild(card);
     });
+}
 
-    index += LIMIT;
-  }
+
+
+  
 
   // Scroll infinito
   window.addEventListener('scroll', () => {
