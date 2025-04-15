@@ -7,8 +7,101 @@
     <link rel="stylesheet" href="./src/style.css" />
     <title>Vite + TS</title>
   </head>
-<body class="bg-gray-100">
-  <div class="bg-simpsons container mx-auto max-w-[2000px] flex flex-wrap items-center justify-center gap-[50px] min-h-screen p-4 ">
+<body>
+
+  <div id="header" class="pt-3">
+    <div class="flex justify-center">
+      <img class="w-[300px]" src="./src/img/los_simpson.png" alt="los_simpson">
+    </div>
+
+    <div class="divider">GÉNERO</div>
+
+    <div id="filtros-genero" class="flex flex-wrap justify-center gap-4 p-1">
+      <label class="cursor-pointer">
+        <input type="checkbox" name="genero" value="Masculino" class="peer hidden" />
+        <span class="block bg-white rounded-lg border-2 border-black px-4 py-2 text-center transition 
+                      peer-checked:bg-blue-600 peer-checked:text-white 
+                      hover:bg-blue-100 hover:border-blue-400 hover:text-black">
+          <img class="w-[60px]" src="./src/img/logo_genero_masculino.png" alt="logo_genero_masculino">M
+        </span>
+      </label>
+      <label class="cursor-pointer">
+        <input type="checkbox" name="genero" value="Femenino" class="peer hidden" />
+        <span class="block bg-white rounded-lg border-2 border-black px-4 py-2 text-center transition 
+                      peer-checked:bg-pink-600 peer-checked:text-white 
+                      hover:bg-pink-100 hover:border-pink-400 hover:text-black">
+          <img class="w-[60px]" src="./src/img/logo_genero_femenino.png" alt="logo_genero_femenino">F
+        </span>
+      </label>
+      <label class="cursor-pointer">
+        <input type="checkbox" name="genero" value="Otros" class="peer hidden" />
+        <span class="block bg-white rounded-lg border-2 border-black px-4 py-2 text-center transition 
+                      peer-checked:bg-yellow-500 peer-checked:text-white 
+                      hover:bg-yellow-100 hover:border-yellow-400 hover:text-black">
+          <img class="w-[60px]" src="./src/img/logo_genero_desconocido.png" alt="logo_genero_desconocido">?
+        </span>
+      </label>
+    </div>
+
+    <div class="divider">ESTADO</div>
+
+<fieldset aria-label="Filtrar por estado" class="p-4 pt-1">
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+    <label class="cursor-pointer">
+      <input type="checkbox" name="estado" value="Vivo vivo Viva" class="peer hidden" />
+      <span class="block bg-white rounded-lg border-2 border-black text-black font-semibold px-4 py-2 text-center transition 
+                    peer-checked:ring-2 peer-checked:ring-green-500 peer-checked:bg-green-400 peer-checked:text-white 
+                    hover:bg-green-100 hover:border-green-400 hover:shadow hover:text-black
+                    ">
+        Vivo
+      </span>
+    </label>
+
+    <label class="cursor-pointer">
+      <input type="checkbox" name="estado" value="Muerto Fallecido" class="peer hidden" />
+      <span class="block bg-white rounded-lg border-2 border-black text-black font-semibold px-4 py-2 text-center transition 
+                    peer-checked:ring-2 peer-checked:ring-red-500 peer-checked:bg-red-400 peer-checked:text-white 
+                    hover:bg-red-100 hover:border-red-400 hover:shadow hover:text-black
+                    ">
+        Muerto
+      </span>
+    </label>
+
+    <label class="cursor-pointer">
+      <input type="checkbox" name="estado" value="Biblico Divino" class="peer hidden" />
+      <span class="block bg-white rounded-lg border-2 border-black text-black font-semibold px-4 py-2 text-center transition 
+                    peer-checked:ring-2 peer-checked:ring-purple-500 peer-checked:bg-purple-400 peer-checked:text-white 
+                    hover:bg-purple-100 hover:border-purple-400 hover:shadow hover:text-black
+                    ">
+        Bíblico
+      </span>
+    </label>
+
+    <label class="cursor-pointer">
+      <input type="checkbox" name="estado" value="Robot Robots" class="peer hidden" />
+      <span class="block bg-white rounded-lg border-2 border-black text-black font-semibold px-4 py-2 text-center transition 
+                    peer-checked:ring-2 peer-checked:ring-yellow-500 peer-checked:bg-yellow-400 peer-checked:text-white 
+                    hover:bg-yellow-100 hover:border-yellow-400 hover:shadow hover:text-black
+                    ">
+        Robot
+      </span>
+    </label>
+
+    <label class="cursor-pointer">
+      <input type="checkbox" name="estado" value="Otros" class="peer hidden" />
+      <span class="block bg-white rounded-lg border-2 border-black text-black font-semibold px-4 py-2 text-center transition 
+                    peer-checked:ring-2 peer-checked:ring-gray-600 peer-checked:bg-gray-500 peer-checked:text-white 
+                    hover:bg-gray-100 hover:border-gray-400 hover:shadow hover:text-black
+                    ">
+        Otros
+      </span>
+    </label>
+  </div>
+</fieldset>
+
+  </div>
+  
+  <div class="bg-simpsons container mx-auto max-w-[2000px] flex flex-wrap justify-center min-h-screen px-16 py-4 gap-5">
 
       <!-- Krusty -->
       

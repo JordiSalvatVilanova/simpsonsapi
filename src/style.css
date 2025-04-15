@@ -1,8 +1,27 @@
 @import "tailwindcss";
 
-.bg-simpsons {
-    background-color: #ffdb0f;
+body{
+    background-color: #ffe864 !important;
 }
+
+#header {
+    /* background-color: #ffdb0f; */
+    background-color: #96d4fd;
+
+}
+.bg-simpsons {
+    /* background-color: #3669d7; */
+    /* background-color: #ffdb0fa5; */
+}
+
+
+/* #filtros-genero {
+  background-color: #ffdb0f;
+} */
+
+/* #filtros{
+  background-color: #ffdb0f;
+} */
 
 body {
     margin: 0;
@@ -44,3 +63,54 @@ body {
     font-size: 1.5rem;
     z-index: 1000;
   }
+
+  /* pantalla de carga------------------------- */
+  @keyframes rotar {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .rotar {
+    animation: rotar 0.4s linear;
+  }
+
+  /* DIVIDER TIPO HR */
+  .divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #fadd09;
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-shadow:
+      -1px -1px 0 black,
+       1px -1px 0 black,
+      -1px  1px 0 black,
+       1px  1px 0 black;
+  }
+  
+  
+  .divider::before,
+  .divider::after {
+    content: "";
+    flex: 1;
+    height: 3px;
+    background: linear-gradient(to right, transparent, #ffdb0f);
+  }
+  
+  .divider::after {
+    background: linear-gradient(to left, transparent, #ffdb0f);
+  }
+  
+  .divider:not(:empty)::before {
+    margin-right: 0.75em;
+  }
+  
+  .divider:not(:empty)::after {
+    margin-left: 0.75em;
+  }
+  
