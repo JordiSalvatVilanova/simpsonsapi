@@ -2,6 +2,8 @@
 
 body{
     background-color: #ffe864 !important;
+    font-family: Arial, sans-serif;
+    margin: 0;
 }
 
 #header {
@@ -9,25 +11,7 @@ body{
     background-color: #96d4fd;
 
 }
-.bg-simpsons {
-    /* background-color: #3669d7; */
-    /* background-color: #ffdb0fa5; */
-}
 
-
-/* #filtros-genero {
-  background-color: #ffdb0f;
-} */
-
-/* #filtros{
-  background-color: #ffdb0f;
-} */
-
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-  }
   
   .character-container {
     display: grid;

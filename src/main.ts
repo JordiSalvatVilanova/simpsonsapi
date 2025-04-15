@@ -122,6 +122,55 @@ function mostrarMensajeError(mensaje: string) {
 // INICIAR ANIMACION-----------------------------------------------------------
 const animacion = iniciarAnimacionDeCarga();
 
+// PANTALLA INTERMEDIA-----------------------------------------------------
+function mostrarPantallaBienvenida() {
+  const overlay = document.createElement('div');
+  overlay.id = 'pantalla-bienvenida';
+  overlay.style.position = 'fixed';
+  overlay.style.top = '0';
+  overlay.style.left = '0';
+  overlay.style.width = '100vw';
+  overlay.style.height = '100vh';
+  overlay.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
+  overlay.style.backdropFilter = 'blur(8px)';
+  overlay.style.display = 'flex';
+  overlay.style.flexDirection = 'column';
+  overlay.style.justifyContent = 'center';
+  overlay.style.alignItems = 'center';
+  overlay.style.zIndex = '9999';
+
+  // Imagen
+  const img = document.createElement('img');
+  img.src = './src/img/cerveza.png'; // Cambia por la imagen que tengas
+  img.alt = 'Haz clic para continuar';
+  img.style.width = '150px';
+  img.style.marginBottom = '20px';
+
+  // Texto
+  const texto = document.createElement('div');
+  texto.textContent = 'Haz clic aquí para continuar';
+  texto.style.fontSize = '20px';
+  texto.style.fontWeight = 'bold';
+  texto.style.color = '#333';
+  texto.style.textAlign = 'center';
+
+  overlay.appendChild(img);
+  overlay.appendChild(texto);
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener('click', async () => {
+    overlay.remove();
+  
+    try {
+      await sonidoCargaCompleta.play();
+    } catch (error) {
+      console.warn('No se pudo reproducir el sonido:', error);
+    }
+  });
+  ;
+}
+
+
 
   // Contenedor principal
   const container = document.getElementsByClassName('container')[0] as HTMLElement;
@@ -223,10 +272,13 @@ function actualizarSeleccion() {
 }
 
 function aplicarFiltros() {
+  const excluidosGenero = ["Masculino", "Femenino"];
+  const excluidosEstado = ["Vivo", "vivo", "Viva", "Muerto", "Fallecido", "Robot", "Robots", "Biblico", "Divino", "Ficticio"];
+
   let filtrados: Personaje[] = [];
 
+  // ✅ Ningún filtro activo: mostrar todos
   if (generosSeleccionados.length === 0 && estadosSeleccionados.length === 0) {
-    // ✅ Ningún filtro activo: mostrar todos
     index = 0;
     activeCharacters = allCharacters;
     container.innerHTML = '';
@@ -235,53 +287,48 @@ function aplicarFiltros() {
     return;
   }
 
-  if (generosSeleccionados.length > 0 && estadosSeleccionados.length === 0) {
-    // ✅ Solo filtrado por género
-    generosSeleccionados.forEach(g => {
-      if (g === "Otros") {
-        const excluidos = ["Masculino", "Femenino"];
-        filtrados = filtrados.concat(allCharacters.filter(p => !excluidos.includes(p.Genero)));
-      } else {
-        filtrados = filtrados.concat(allCharacters.filter(p => p.Genero === g));
-      }
-    });
-  } else if (generosSeleccionados.length === 0 && estadosSeleccionados.length > 0) {
-    // ✅ Solo filtrado por estado
-    estadosSeleccionados.forEach(e => {
-      if (e === "Otros") {
-        const excluidos = ["Vivo", "vivo", "Viva", "Muerto", "Fallecido", "Robot", "Robots", "Biblico", "Divino"];
-        filtrados = filtrados.concat(allCharacters.filter(p => !excluidos.includes(p.Estado)));
-      } else {
-        filtrados = filtrados.concat(allCharacters.filter(p => p.Estado === e));
-      }
-    });
-  } else {
-    // ✅ Filtrado combinado: género y estado
-    generosSeleccionados.forEach(g => {
-      let generoFiltrados: Personaje[];
+  // ✅ Aplicar filtros manteniendo orden original
+  filtrados = allCharacters.filter(p => {
+    let generoMatch = true;
+    let estadoMatch = true;
 
-      if (g === "Otros") {
-        const excluidos = ["Masculino", "Femenino"];
-        generoFiltrados = allCharacters.filter(p => !excluidos.includes(p.Genero));
+    // ✅ Solo filtrado por género (o combinado)
+    if (generosSeleccionados.length > 0) {
+      if (generosSeleccionados.includes("Otros")) {
+        if (excluidosGenero.includes(p.Genero)) {
+          generoMatch = false;
+        }
       } else {
-        generoFiltrados = allCharacters.filter(p => p.Genero === g);
+        if (!generosSeleccionados.includes(p.Genero)) {
+          generoMatch = false;
+        }
       }
+    }
 
-      estadosSeleccionados.forEach(e => {
-        filtrados = filtrados.concat(generoFiltrados.filter(p => p.Estado === e));
-      });
-    });
-  }
+    // ✅ Solo filtrado por estado (o combinado)
+    if (estadosSeleccionados.length > 0) {
+      if (estadosSeleccionados.includes("Otros")) {
+        if (excluidosEstado.includes(p.Estado)) {
+          estadoMatch = false;
+        }
+      } else {
+        if (!estadosSeleccionados.includes(p.Estado)) {
+          estadoMatch = false;
+        }
+      }
+    }
 
-  // ✅ Mostrar filtrados
+    return generoMatch && estadoMatch;
+  });
+
+  // ✅ Mostrar personajes filtrados
   index = 0;
   activeCharacters = filtrados;
   container.innerHTML = '';
   renderNextCharacters(activeCharacters);
-
   window.scrollTo({ top: 0, behavior: 'smooth' });
-
 }
+
 
 
 // Escuchar cambios
@@ -368,18 +415,11 @@ async function init() {
     setTimeout(async () => {
       animacion.detener();
     
-      try {
-        await sonidoCargaCompleta.play();
-      } catch (error) {
-        console.warn('No se pudo reproducir el sonido:', error);
-      }
-    
       document.body.removeChild(loadingScreen);
+      mostrarPantallaBienvenida();
+    
     }, Math.max(restante, 0));
-  }
-}
-
-
+  }}
 
 init();
 });
