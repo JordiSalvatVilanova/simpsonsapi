@@ -206,30 +206,51 @@ function mostrarPantallaBienvenida() {
       `.trim();
 
       card.innerHTML = `
-        <div class="titulo text-center text-black font-bold text-xl line-clamp-1" title="${personaje.Nombre}">
-          ${personaje.Nombre}
-        </div>
-        <div class="contenido flex flex-col sm:flex-row w-full justify-between items-center gap-4">
-          <div class="imagen-container w-[200px] h-[200px] flex items-center justify-center bg-gray-100 rounded-xl overflow-hidden">
-            <img
-              class="imagen w-full h-full object-contain"
-              src="${personaje.Imagen}"
-              alt="${personaje.Nombre}"
-            />
+
+          <!-- Frente -->
+          <div class="card-front">
+            <div class="titulo text-center text-black font-bold text-xl line-clamp-1 m-2" title="${personaje.Nombre}">
+              ${personaje.Nombre}
+            </div>
+            <div class="contenido flex flex-col sm:flex-row w-full justify-between items-center gap-4 px-4">
+              <div class="imagen-container w-[200px] h-[200px] flex items-center justify-center bg-gray-100 rounded-xl overflow-hidden">
+                <img
+                  class="imagen w-full h-full object-contain"
+                  src="${personaje.Imagen}"
+                  alt="${personaje.Nombre}"
+                />
+              </div>
+              <div class="leyenda flex-1 h-auto p-4 bg-white rounded-xl border border-gray-200 shadow text-left flex flex-col justify-center">
+                <p class="text-md text-gray-700 mb-2">
+                  <span class="font-semibold">Género:</span> ${personaje.Genero}
+                </p>
+                <p class="text-md text-gray-700 mb-2">
+                  <span class="font-semibold">Estado:</span> ${personaje.Estado}
+                </p>
+                <p class="text-md text-gray-700 mb-2 line-clamp-3" title="${personaje.Ocupacion}">
+                  <span class="font-semibold">Ocupación:</span> ${personaje.Ocupacion}
+                </p>
+              </div>
+            </div>
           </div>
-          <div class="leyenda flex-1 h-auto p-4 bg-white rounded-xl border border-gray-200 shadow text-left flex flex-col justify-center">
-            <p class="text-md text-gray-700 mb-2">
-              <span class="font-semibold">Género:</span> ${personaje.Genero}
-            </p>
-            <p class="text-md text-gray-700 mb-2">
-              <span class="font-semibold">Estado:</span> ${personaje.Estado}
-            </p>
-            <p class="text-md text-gray-700 mb-2 line-clamp-3" title="${personaje.Ocupacion}">
-              <span class="font-semibold">Ocupación:</span> ${personaje.Ocupacion}
-            </p>
+
+          <!-- Parte trasera -->
+          <div class="card-back">
+            <div class="titulo-back text-center text-xl font-bold text-black mb-2">${personaje.Nombre}</div>
+            <div class="historia text-sm text-gray-800 overflow-y-auto flex-1">
+              ${personaje.Historia?.trim()
+                ? personaje.Historia
+                : '<em class="text-gray-500">Este personaje no tiene historia disponible.</em>'}
+            </div>
           </div>
-        </div>
+
       `;
+      
+
+      card.addEventListener('click', () => {
+        card.classList.toggle('rotada');
+      });
+
 
       container.appendChild(card);
     });
@@ -287,35 +308,48 @@ function aplicarFiltros() {
     return;
   }
 
-  // ✅ Aplicar filtros manteniendo orden original
   filtrados = allCharacters.filter(p => {
     let generoMatch = true;
     let estadoMatch = true;
 
-    // ✅ Solo filtrado por género (o combinado)
+    // -------------------- GÉNERO --------------------
     if (generosSeleccionados.length > 0) {
+      const generoSet = new Set<string>();
+
+      // Si se seleccionó "Otros", agregamos todos los géneros no comunes
       if (generosSeleccionados.includes("Otros")) {
-        if (excluidosGenero.includes(p.Genero)) {
-          generoMatch = false;
-        }
-      } else {
-        if (!generosSeleccionados.includes(p.Genero)) {
-          generoMatch = false;
-        }
+        allCharacters.forEach(p => {
+          if (!excluidosGenero.includes(p.Genero)) {
+            generoSet.add(p.Genero);
+          }
+        });
       }
+
+      // Agregamos los géneros seleccionados directamente (excepto "Otros")
+      generosSeleccionados.forEach(g => {
+        if (g !== "Otros") generoSet.add(g);
+      });
+
+      generoMatch = generoSet.has(p.Genero);
     }
 
-    // ✅ Solo filtrado por estado (o combinado)
+    // -------------------- ESTADO --------------------
     if (estadosSeleccionados.length > 0) {
+      const estadoSet = new Set<string>();
+
       if (estadosSeleccionados.includes("Otros")) {
-        if (excluidosEstado.includes(p.Estado)) {
-          estadoMatch = false;
-        }
-      } else {
-        if (!estadosSeleccionados.includes(p.Estado)) {
-          estadoMatch = false;
-        }
+        allCharacters.forEach(p => {
+          if (!excluidosEstado.includes(p.Estado)) {
+            estadoSet.add(p.Estado);
+          }
+        });
       }
+
+      estadosSeleccionados.forEach(e => {
+        if (e !== "Otros") estadoSet.add(e);
+      });
+
+      estadoMatch = estadoSet.has(p.Estado);
     }
 
     return generoMatch && estadoMatch;
@@ -331,69 +365,63 @@ function aplicarFiltros() {
 
 
 
+
 // Escuchar cambios
 generoInputs.forEach(input => input.addEventListener('change', actualizarSeleccion));
 estadoInputs.forEach(input => input.addEventListener('change', actualizarSeleccion));
 
-//   // Filtros-----------------------
-//   // 🎯 FILTRO POR GÉNERO
-// const filtroGeneroBtns = document.querySelectorAll('.filtro-genero-btn');
 
-// filtroGeneroBtns.forEach(btn => {
-//   btn.addEventListener('click', () => {
-//     const genero = btn.getAttribute('data-genero')!;
-//     index = 0;
-//     filtroActivo = true;
+const buscadorInput = document.getElementById('buscador') as HTMLInputElement;
 
-//     if (genero === 'Todos') {
-//       activeCharacters = allCharacters;
-//     } else if (genero === 'Otros') {
-//       const excluidos = ['Masculino', 'Femenino'];
-//       activeCharacters = allCharacters.filter(personaje =>
-//         !excluidos.includes(personaje.Genero)
-//       );
-//     } else {
-//       activeCharacters = allCharacters.filter(p =>
-//         p.Genero === genero
-//       );
-//     }
+buscadorInput.addEventListener('input', () => {
+  const texto = buscadorInput.value.trim().toLowerCase();
 
-//     container.innerHTML = '';
-//     renderNextCharacters(activeCharacters);
-//   });
-// });
-// // -------------------------
-//   // 🎯 FILTRO POR ESTADO
-//   const filtroRadios = document.querySelectorAll('input[name="estado"]');
+  // ✅ Si el input está vacío, restauramos todos los personajes
+  if (texto === '') {
+    activeCharacters = allCharacters;
+    index = 0;
+    container.innerHTML = '';
+    renderNextCharacters(activeCharacters);
+    return;
+  }
 
-//   filtroRadios.forEach(radio => {
-//     radio.addEventListener('change', () => {
-//       const input = radio as HTMLInputElement;
-//       const estado = input.value;
-//       index = 0;
-//       filtroActivo = true;
+  // ✅ Desactivar filtros visualmente y por lógica
+  generoInputs.forEach(input => {
+    (input as HTMLInputElement).checked = false;
+  });
+  estadoInputs.forEach(input => {
+    (input as HTMLInputElement).checked = false;
+  });
+  generosSeleccionados = [];
+  estadosSeleccionados = [];
 
-//       if (estado === 'Todos') {
-//         filtroActivo = false;
-//         activeCharacters = allCharacters;
-//       } else if (estado === 'Otros') {
-//         const excluidos = ['Vivo', 'vivo', 'Viva', 'Muerto', 'Fallecido', 'Robot', 'Robots', 'Biblico', 'Ficticio', 'Divino'];
-//         activeCharacters = allCharacters.filter(personaje =>
-//           !excluidos.includes(personaje.Estado)
-//         );
-//       } else {
-//         const estadosPermitidos = estado.split(' ');
-//         activeCharacters = allCharacters.filter(p =>
-//           estadosPermitidos.includes(p.Estado)
-//         );
-//       }
+  // ✅ Filtrar por nombre (ignorando mayúsculas/minúsculas)
+  const resultado = allCharacters.filter(p =>
+    p.Nombre.toLowerCase().includes(texto)
+  );
 
-//       container.innerHTML = '';
-//       renderNextCharacters(activeCharacters);
-//     });
-//   });
-// // ----------------------------
+  index = 0;
+  activeCharacters = resultado;
+  container.innerHTML = '';
+  renderNextCharacters(activeCharacters);
+});
 
+
+// BOTÓN "VOLVER ARRIBA" 🍩 --------------------------
+const btnScrollTop = document.getElementById('btnScrollTop') as HTMLButtonElement;
+
+window.addEventListener('scroll', () => {
+  // Mostrar si bajaste más de 400px
+  if (window.scrollY > 400) {
+    btnScrollTop.classList.remove('hidden');
+  } else {
+    btnScrollTop.classList.add('hidden');
+  }
+});
+
+btnScrollTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 
 
 // INICIALIZAR-----------------------------------------------------------
