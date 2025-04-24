@@ -204,4 +204,104 @@ body{
   }
   
   
+  /* NUBES ------------------------------------------------------------------------------------- */
+  
+  #header {
+    position: relative;
+    background-color: #96d4fd;
+    overflow: hidden;
+    z-index: 0; /* fondo */
+  }
+  
+  /* Contenedor de nubes al fondo */
+  .clouds-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+  
+  /* ✅ Este selector es clave */
+  #header > *:not(.clouds-container) {
+    position: relative;
+    z-index: 10;
+  }
+  
+
+  
+  .cloud {
+    position: absolute;
+    opacity: 0.7;
+    width: 200px;
+    animation: cloudMove linear infinite;
+  }
+  
+  .cloud-1 {
+    top: 5%;
+    left: -300px;
+    animation-duration: 40s;
+    animation-delay: 0s;
+  }
+  
+  .cloud-2 {
+    top: 10%;
+    left: -400px;
+    width: 250px;
+    animation-duration: 60s;
+    animation-delay: 5s;
+  }
+  
+  .cloud-3 {
+    top: 45%;
+    left: -350px;
+    width: 180px;
+    animation-duration: 55s;
+    animation-delay: 10s;
+  }
+  
+  .cloud-4 {
+    top: 22%;
+    left: -500px;
+    width: 220px;
+    animation-duration: 65s;
+    animation-delay: 15s;
+  }
+  
+  .cloud-5 {
+    top: 30%;
+    left: -600px;
+    width: 270px;
+    animation-duration: 55s;
+    animation-delay: 20s;
+  }
+  
+  .cloud-6 {
+    top: 60%;
+    left: -700px;
+    width: 230px;
+    animation-duration: 37s;
+    animation-delay: 1s;
+  }
+
+  /* Animación de izquierda a derecha */
+@keyframes cloudMove {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(150vw); /* sale por la derecha */
+  }
+}
+
+@keyframes cloudMove {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(140vw); /* se va de izquierda a derecha */
+  }
+}
   
